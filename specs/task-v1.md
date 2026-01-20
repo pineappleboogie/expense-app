@@ -73,23 +73,23 @@
     - [x] 2.4.4 Calculate progress percentages for min and max thresholds
     - [x] 2.4.5 Calculate category cap progress including min spend unlock logic
 
-- [ ] 3.0 ViewModels Layer
-  - [ ] 3.1 Implement `CardManagementViewModel` with:
-    - [ ] 3.1.1 Method to fetch all user cards from SwiftData
-    - [ ] 3.1.2 Method to add a card from CardTemplate (pre-populated library)
-    - [ ] 3.1.3 Method to add a custom card with user-defined fields
-    - [ ] 3.1.4 Method to update an existing card
-    - [ ] 3.1.5 Method to delete a card (with cascade delete of expenses)
-    - [ ] 3.1.6 Method to reorder cards
-  - [ ] 3.2 Implement `ExpenseViewModel` with:
-    - [ ] 3.2.1 Method to add a new expense with amount, card, date, optional category, and optional bonus category
-    - [ ] 3.2.2 Method to delete an expense
-    - [ ] 3.2.3 Method to fetch expenses for a specific card within date range
-  - [ ] 3.3 Implement `DashboardViewModel` with:
-    - [ ] 3.3.1 Method to calculate monthly overview total (calendar month, all cards)
-    - [ ] 3.3.2 Method to fetch all cards with their current cycle spending summaries
-    - [ ] 3.3.3 Computed properties for each card's threshold status and progress
-    - [ ] 3.3.4 Method to get category cap progress for cards with hasCategoryCaps = true
+- [x] 3.0 ViewModels Layer
+  - [x] 3.1 Implement `CardManagementViewModel` with:
+    - [x] 3.1.1 Method to fetch all user cards from SwiftData
+    - [x] 3.1.2 Method to add a card from CardTemplate (pre-populated library)
+    - [x] 3.1.3 Method to add a custom card with user-defined fields
+    - [x] 3.1.4 Method to update an existing card
+    - [x] 3.1.5 Method to delete a card (with cascade delete of expenses)
+    - [x] 3.1.6 Method to reorder cards
+  - [x] 3.2 Implement `ExpenseViewModel` with:
+    - [x] 3.2.1 Method to add a new expense with amount, card, date, optional category, and optional bonus category
+    - [x] 3.2.2 Method to delete an expense
+    - [x] 3.2.3 Method to fetch expenses for a specific card within date range
+  - [x] 3.3 Implement `DashboardViewModel` with:
+    - [x] 3.3.1 Method to calculate monthly overview total (calendar month, all cards)
+    - [x] 3.3.2 Method to fetch all cards with their current cycle spending summaries
+    - [x] 3.3.3 Computed properties for each card's threshold status and progress
+    - [x] 3.3.4 Method to get category cap progress for cards with hasCategoryCaps = true
 
 - [ ] 4.0 Onboarding Flow
   - [ ] 4.1 Implement `OnboardingView` with:
