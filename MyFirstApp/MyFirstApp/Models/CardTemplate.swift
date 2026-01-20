@@ -23,6 +23,7 @@ struct CardTemplate: Identifiable {
     let rewardNotes: String?
     let hasCategoryCaps: Bool
     let categoryCaps: [CategoryCapTemplate]
+    let cycleType: CycleType
 
     init(
         bank: Bank,
@@ -33,7 +34,8 @@ struct CardTemplate: Identifiable {
         baseMilesRate: Double? = nil,
         rewardNotes: String? = nil,
         hasCategoryCaps: Bool = false,
-        categoryCaps: [CategoryCapTemplate] = []
+        categoryCaps: [CategoryCapTemplate] = [],
+        cycleType: CycleType = .calendarMonth
     ) {
         self.bank = bank
         self.network = network
@@ -44,13 +46,16 @@ struct CardTemplate: Identifiable {
         self.rewardNotes = rewardNotes
         self.hasCategoryCaps = hasCategoryCaps
         self.categoryCaps = categoryCaps
+        self.cycleType = cycleType
     }
 
-    func toCreditCard(lastFourDigits: String? = nil, displayOrder: Int = 0) -> CreditCard {
+    func toCreditCard(lastFourDigits: String? = nil, displayOrder: Int = 0, statementDate: Int? = nil) -> CreditCard {
         let card = CreditCard(
             bank: bank,
             network: network,
             cardName: cardName,
+            cycleType: cycleType,
+            statementDate: statementDate,
             localEarnRate: localEarnRate,
             foreignEarnRate: foreignEarnRate,
             baseMilesRate: baseMilesRate,
@@ -154,7 +159,8 @@ struct CardLibrary {
             categoryCaps: [
                 CategoryCapTemplate(category: .foreignCurrency, minSpend: 1000, capAmount: 1200, bonusRate: 4.0),
                 CategoryCapTemplate(category: .contactless, minSpend: 1000, capAmount: 1200, bonusRate: 4.0)
-            ]
+            ],
+            cycleType: .statementMonth
         ),
         CardTemplate(
             bank: .uob,
@@ -226,7 +232,8 @@ struct CardLibrary {
             localEarnRate: 4.0,
             foreignEarnRate: 4.0,
             baseMilesRate: 0.4,
-            rewardNotes: "10x on categories"
+            rewardNotes: "10x on categories",
+            cycleType: .statementMonth
         ),
         CardTemplate(
             bank: .citibank,

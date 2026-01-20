@@ -62,16 +62,16 @@
   - [x] 1.10 Implement `CardTemplate` struct with static array of all pre-populated cards from PRD (DBS, UOB, OCBC, Citibank, HSBC, StanChart, AMEX, Maybank) including category caps for UOB cards
   - [x] 1.11 Update `MyFirstAppApp.swift` to configure SwiftData ModelContainer with CreditCard, Expense, and CategoryCap models
 
-- [ ] 2.0 Services & Business Logic
-  - [ ] 2.1 Implement `Date+Extensions.swift` with helpers: startOfMonth, endOfMonth, startOfDay, formatting methods
-  - [ ] 2.2 Implement `Decimal+Extensions.swift` with currency formatting (SGD) and percentage calculation helpers
-  - [ ] 2.3 Implement `DateRangeCalculator` service with method to calculate current cycle date range based on CycleType and optional statement date
-  - [ ] 2.4 Implement `SpendingCalculator` service with methods to:
-    - [ ] 2.4.1 Calculate total spending for a card within a date range
-    - [ ] 2.4.2 Calculate spending per bonus category for cards with category caps
-    - [ ] 2.4.3 Determine threshold status (below min, min met, in range, over max)
-    - [ ] 2.4.4 Calculate progress percentages for min and max thresholds
-    - [ ] 2.4.5 Calculate category cap progress including min spend unlock logic
+- [x] 2.0 Services & Business Logic
+  - [x] 2.1 Implement `Date+Extensions.swift` with helpers: startOfMonth, endOfMonth, startOfDay, formatting methods
+  - [x] 2.2 Implement `Decimal+Extensions.swift` with currency formatting (SGD) and percentage calculation helpers
+  - [x] 2.3 Implement `DateRangeCalculator` service with method to calculate current cycle date range based on CycleType and optional statement date
+  - [x] 2.4 Implement `SpendingCalculator` service with methods to:
+    - [x] 2.4.1 Calculate total spending for a card within a date range
+    - [x] 2.4.2 Calculate spending per bonus category for cards with category caps
+    - [x] 2.4.3 Determine threshold status (below min, min met, in range, over max)
+    - [x] 2.4.4 Calculate progress percentages for min and max thresholds
+    - [x] 2.4.5 Calculate category cap progress including min spend unlock logic
 
 - [ ] 3.0 ViewModels Layer
   - [ ] 3.1 Implement `CardManagementViewModel` with:
