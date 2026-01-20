@@ -49,18 +49,18 @@
 
 ## Tasks
 
-- [ ] 1.0 Project Foundation & Data Models
-  - [ ] 1.1 Create folder structure (Models/, Services/, ViewModels/, Views/, Views/Dashboard/, Views/Expenses/, Views/Cards/, Views/Onboarding/, Views/Components/, Extensions/)
-  - [ ] 1.2 Implement `Bank` enum with cases: DBS, UOB, OCBC, Citibank, HSBC, StanChart, AMEX, Maybank, Other
-  - [ ] 1.3 Implement `CardNetwork` enum with cases: Visa, Mastercard, AMEX, Other
-  - [ ] 1.4 Implement `ExpenseCategory` enum with cases and SF Symbol icons: Dining, Transport, Shopping, Groceries, Online, Travel, Utilities, Others
-  - [ ] 1.5 Implement `BonusCategory` enum with cases: online, contactless, foreignCurrency, dining, travel, groceries, transport, shopping, fuel, general
-  - [ ] 1.6 Implement `CycleType` enum with cases: calendarMonth, statementMonth
-  - [ ] 1.7 Implement `CategoryCap` SwiftData @Model with fields: id, category (BonusCategory), minSpend (Decimal?), capAmount (Decimal), bonusRate (Double), card reference
-  - [ ] 1.8 Implement `CreditCard` SwiftData @Model with all fields from PRD including relationships to CategoryCap and Expense (cascade delete)
-  - [ ] 1.9 Implement `Expense` SwiftData @Model with fields: id, amount (Decimal), date, category (ExpenseCategory?), bonusCategory (BonusCategory?), card reference
-  - [ ] 1.10 Implement `CardTemplate` struct with static array of all pre-populated cards from PRD (DBS, UOB, OCBC, Citibank, HSBC, StanChart, AMEX, Maybank) including category caps for UOB cards
-  - [ ] 1.11 Update `MyFirstAppApp.swift` to configure SwiftData ModelContainer with CreditCard, Expense, and CategoryCap models
+- [x] 1.0 Project Foundation & Data Models
+  - [x] 1.1 Create folder structure (Models/, Services/, ViewModels/, Views/, Views/Dashboard/, Views/Expenses/, Views/Cards/, Views/Onboarding/, Views/Components/, Extensions/)
+  - [x] 1.2 Implement `Bank` enum with cases: DBS, UOB, OCBC, Citibank, HSBC, StanChart, AMEX, Maybank, Other
+  - [x] 1.3 Implement `CardNetwork` enum with cases: Visa, Mastercard, AMEX, Other
+  - [x] 1.4 Implement `ExpenseCategory` enum with cases and SF Symbol icons: Dining, Transport, Shopping, Groceries, Online, Travel, Utilities, Others
+  - [x] 1.5 Implement `BonusCategory` enum with cases: online, contactless, foreignCurrency, dining, travel, groceries, transport, shopping, fuel, general
+  - [x] 1.6 Implement `CycleType` enum with cases: calendarMonth, statementMonth
+  - [x] 1.7 Implement `CategoryCap` SwiftData @Model with fields: id, category (BonusCategory), minSpend (Decimal?), capAmount (Decimal), bonusRate (Double), card reference
+  - [x] 1.8 Implement `CreditCard` SwiftData @Model with all fields from PRD including relationships to CategoryCap and Expense (cascade delete)
+  - [x] 1.9 Implement `Expense` SwiftData @Model with fields: id, amount (Decimal), date, category (ExpenseCategory?), bonusCategory (BonusCategory?), card reference
+  - [x] 1.10 Implement `CardTemplate` struct with static array of all pre-populated cards from PRD (DBS, UOB, OCBC, Citibank, HSBC, StanChart, AMEX, Maybank) including category caps for UOB cards
+  - [x] 1.11 Update `MyFirstAppApp.swift` to configure SwiftData ModelContainer with CreditCard, Expense, and CategoryCap models
 
 - [ ] 2.0 Services & Business Logic
   - [ ] 2.1 Implement `Date+Extensions.swift` with helpers: startOfMonth, endOfMonth, startOfDay, formatting methods
