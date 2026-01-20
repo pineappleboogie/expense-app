@@ -1,50 +1,82 @@
 //
-//  AddCustomCardView.swift
+//  EditCardView.swift
 //  MyFirstApp
 //
 
 import SwiftUI
 import SwiftData
 
-struct AddCustomCardView: View {
+struct EditCardView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
-    let isOnboarding: Bool
+    let card: CreditCard
 
     // Card Basic Info
-    @State private var selectedBank: Bank = .dbs
-    @State private var selectedNetwork: CardNetwork = .visa
-    @State private var cardName: String = ""
-    @State private var lastFourDigits: String = ""
+    @State private var selectedBank: Bank
+    @State private var selectedNetwork: CardNetwork
+    @State private var cardName: String
+    @State private var lastFourDigits: String
 
     // Cycle Settings
-    @State private var cycleType: CycleType = .calendarMonth
-    @State private var statementDate: Int = 15
+    @State private var cycleType: CycleType
+    @State private var statementDate: Int
 
     // Thresholds
-    @State private var hasMinThreshold: Bool = false
-    @State private var minThresholdString: String = ""
-    @State private var hasMaxThreshold: Bool = false
-    @State private var maxThresholdString: String = ""
+    @State private var hasMinThreshold: Bool
+    @State private var minThresholdString: String
+    @State private var hasMaxThreshold: Bool
+    @State private var maxThresholdString: String
 
     // Earn Rates
-    @State private var localEarnRateString: String = ""
-    @State private var foreignEarnRateString: String = ""
-    @State private var baseMilesRateString: String = ""
+    @State private var localEarnRateString: String
+    @State private var foreignEarnRateString: String
+    @State private var baseMilesRateString: String
 
     // Notes
-    @State private var rewardNotes: String = ""
+    @State private var rewardNotes: String
 
     // Category Caps
-    @State private var hasCategoryCaps: Bool = false
-    @State private var categoryCaps: [EditableCategoryCap] = []
+    @State private var hasCategoryCaps: Bool
+    @State private var categoryCaps: [EditableCategoryCap]
 
-    @State private var showValidationError: Bool = false
-    @State private var validationErrorMessage: String = ""
+    // Alerts
+    @State private var showDeleteConfirmation = false
+    @State private var showValidationError = false
+    @State private var validationErrorMessage = ""
 
-    init(isOnboarding: Bool = false) {
-        self.isOnboarding = isOnboarding
+    init(card: CreditCard) {
+        self.card = card
+
+        _selectedBank = State(initialValue: card.bank)
+        _selectedNetwork = State(initialValue: card.network)
+        _cardName = State(initialValue: card.cardName)
+        _lastFourDigits = State(initialValue: card.lastFourDigits ?? "")
+
+        _cycleType = State(initialValue: card.cycleType)
+        _statementDate = State(initialValue: card.statementDate ?? 15)
+
+        _hasMinThreshold = State(initialValue: card.minSpendingThreshold != nil)
+        _minThresholdString = State(initialValue: card.minSpendingThreshold.map { "\($0)" } ?? "")
+        _hasMaxThreshold = State(initialValue: card.maxSpendingThreshold != nil)
+        _maxThresholdString = State(initialValue: card.maxSpendingThreshold.map { "\($0)" } ?? "")
+
+        _localEarnRateString = State(initialValue: card.localEarnRate.map { String($0) } ?? "")
+        _foreignEarnRateString = State(initialValue: card.foreignEarnRate.map { String($0) } ?? "")
+        _baseMilesRateString = State(initialValue: card.baseMilesRate.map { String($0) } ?? "")
+
+        _rewardNotes = State(initialValue: card.rewardNotes ?? "")
+
+        _hasCategoryCaps = State(initialValue: card.hasCategoryCaps)
+        _categoryCaps = State(initialValue: card.categoryCaps.map { cap in
+            EditableCategoryCap(
+                category: cap.category,
+                hasMinSpend: cap.minSpend != nil,
+                minSpendString: cap.minSpend.map { "\($0)" } ?? "",
+                capAmountString: "\(cap.capAmount)",
+                bonusRateString: String(cap.bonusRate)
+            )
+        })
     }
 
     var body: some View {
@@ -92,7 +124,7 @@ struct AddCustomCardView: View {
             }
 
             // MARK: - Thresholds
-            Section(header: Text("Spending Thresholds"), footer: Text("Set minimum spend to earn bonus miles, or maximum cap for bonus earning.")) {
+            Section(header: Text("Spending Thresholds")) {
                 Toggle("Has Minimum Spend", isOn: $hasMinThreshold)
 
                 if hasMinThreshold {
@@ -115,7 +147,7 @@ struct AddCustomCardView: View {
             }
 
             // MARK: - Earn Rates
-            Section(header: Text("Earn Rates (Miles per Dollar)"), footer: Text("Leave blank if not applicable.")) {
+            Section(header: Text("Earn Rates (Miles per Dollar)")) {
                 HStack {
                     Text("Local")
                     Spacer()
@@ -157,11 +189,10 @@ struct AddCustomCardView: View {
             }
 
             // MARK: - Category Caps
-            Section(header: Text("Category Caps"), footer: Text("Enable if this card has per-category spending caps with different bonus rates.")) {
+            Section(header: Text("Category Caps")) {
                 Toggle("Has Category Caps", isOn: $hasCategoryCaps)
                     .onChange(of: hasCategoryCaps) { _, newValue in
                         if newValue && categoryCaps.isEmpty {
-                            // Add a default category cap
                             categoryCaps.append(EditableCategoryCap())
                         }
                     }
@@ -187,19 +218,32 @@ struct AddCustomCardView: View {
             // MARK: - Save Button
             Section {
                 Button {
-                    saveCard()
+                    saveChanges()
                 } label: {
                     HStack {
                         Spacer()
-                        Text("Save Card")
+                        Text("Save Changes")
                             .fontWeight(.semibold)
                         Spacer()
                     }
                 }
                 .disabled(!isFormValid)
             }
+
+            // MARK: - Delete Button
+            Section {
+                Button(role: .destructive) {
+                    showDeleteConfirmation = true
+                } label: {
+                    HStack {
+                        Spacer()
+                        Text("Delete Card")
+                        Spacer()
+                    }
+                }
+            }
         }
-        .navigationTitle("Custom Card")
+        .navigationTitle("Edit Card")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -207,6 +251,14 @@ struct AddCustomCardView: View {
                     dismiss()
                 }
             }
+        }
+        .alert("Delete Card", isPresented: $showDeleteConfirmation) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                deleteCard()
+            }
+        } message: {
+            Text("Are you sure you want to delete this card? All associated expenses will also be deleted.")
         }
         .alert("Validation Error", isPresented: $showValidationError) {
             Button("OK", role: .cancel) { }
@@ -223,7 +275,7 @@ struct AddCustomCardView: View {
 
     // MARK: - Save
 
-    private func saveCard() {
+    private func saveChanges() {
         guard isFormValid else {
             validationErrorMessage = "Please enter a card name."
             showValidationError = true
@@ -232,26 +284,30 @@ struct AddCustomCardView: View {
 
         let viewModel = CardManagementViewModel(modelContext: modelContext)
 
-        // Parse thresholds
-        var minThreshold: Decimal? = nil
-        var maxThreshold: Decimal? = nil
+        // Update basic info
+        viewModel.updateCard(
+            card,
+            bank: selectedBank,
+            network: selectedNetwork,
+            cardName: cardName.trimmingCharacters(in: .whitespaces),
+            lastFourDigits: lastFourDigits.isEmpty ? nil : lastFourDigits,
+            cycleType: cycleType,
+            statementDate: cycleType == .statementMonth ? statementDate : nil,
+            minSpendingThreshold: hasMinThreshold ? Decimal(string: minThresholdString) : nil,
+            maxSpendingThreshold: hasMaxThreshold ? Decimal(string: maxThresholdString) : nil,
+            localEarnRate: Double(localEarnRateString),
+            foreignEarnRate: Double(foreignEarnRateString),
+            baseMilesRate: Double(baseMilesRateString),
+            rewardNotes: rewardNotes.isEmpty ? nil : rewardNotes,
+            hasCategoryCaps: hasCategoryCaps,
+            clearMinThreshold: !hasMinThreshold,
+            clearMaxThreshold: !hasMaxThreshold,
+            clearStatementDate: cycleType != .statementMonth
+        )
 
-        if hasMinThreshold, let value = Decimal(string: minThresholdString) {
-            minThreshold = value
-        }
-
-        if hasMaxThreshold, let value = Decimal(string: maxThresholdString) {
-            maxThreshold = value
-        }
-
-        // Parse earn rates
-        let localRate = Double(localEarnRateString)
-        let foreignRate = Double(foreignEarnRateString)
-        let baseRate = Double(baseMilesRateString)
-
-        // Parse category caps
-        var capInputs: [CategoryCapInput] = []
+        // Update category caps if enabled
         if hasCategoryCaps {
+            var capInputs: [CategoryCapInput] = []
             for cap in categoryCaps {
                 guard let capAmount = Decimal(string: cap.capAmountString) else { continue }
                 let bonusRate = Double(cap.bonusRateString) ?? 4.0
@@ -266,117 +322,41 @@ struct AddCustomCardView: View {
                     bonusRate: bonusRate
                 ))
             }
+            viewModel.updateCategoryCaps(for: card, categoryCaps: capInputs)
+        } else {
+            // Clear category caps if disabled
+            viewModel.updateCategoryCaps(for: card, categoryCaps: [])
         }
 
-        viewModel.addCustomCard(
-            bank: selectedBank,
-            network: selectedNetwork,
-            cardName: cardName.trimmingCharacters(in: .whitespaces),
-            lastFourDigits: lastFourDigits.isEmpty ? nil : lastFourDigits,
-            cycleType: cycleType,
-            statementDate: cycleType == .statementMonth ? statementDate : nil,
-            minSpendingThreshold: minThreshold,
-            maxSpendingThreshold: maxThreshold,
-            localEarnRate: localRate,
-            foreignEarnRate: foreignRate,
-            baseMilesRate: baseRate,
-            rewardNotes: rewardNotes.isEmpty ? nil : rewardNotes,
-            hasCategoryCaps: hasCategoryCaps,
-            categoryCaps: capInputs
-        )
+        dismiss()
+    }
 
+    // MARK: - Delete
+
+    private func deleteCard() {
+        let viewModel = CardManagementViewModel(modelContext: modelContext)
+        viewModel.deleteCard(card)
         dismiss()
     }
 }
 
-// MARK: - Editable Category Cap Model
-
-struct EditableCategoryCap: Identifiable {
-    let id: UUID
-    var category: BonusCategory
-    var hasMinSpend: Bool
-    var minSpendString: String
-    var capAmountString: String
-    var bonusRateString: String
-
-    init(
-        id: UUID = UUID(),
-        category: BonusCategory = .online,
-        hasMinSpend: Bool = false,
-        minSpendString: String = "",
-        capAmountString: String = "",
-        bonusRateString: String = "4.0"
-    ) {
-        self.id = id
-        self.category = category
-        self.hasMinSpend = hasMinSpend
-        self.minSpendString = minSpendString
-        self.capAmountString = capAmountString
-        self.bonusRateString = bonusRateString
-    }
-}
-
-// MARK: - Category Cap Edit Row
-
-struct CategoryCapEditRow: View {
-    @Binding var cap: EditableCategoryCap
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Picker("Category", selection: $cap.category) {
-                ForEach(BonusCategory.allCases.filter { $0 != .general }) { category in
-                    Text(category.displayName).tag(category)
-                }
-            }
-
-            Toggle("Has Minimum Spend", isOn: $cap.hasMinSpend)
-                .font(.subheadline)
-
-            if cap.hasMinSpend {
-                HStack {
-                    Text("Min Spend")
-                        .font(.subheadline)
-                    Spacer()
-                    Text("$")
-                    TextField("1000", text: $cap.minSpendString)
-                        .keyboardType(.decimalPad)
-                        .multilineTextAlignment(.trailing)
-                        .frame(width: 80)
-                }
-            }
-
-            HStack {
-                Text("Cap Amount")
-                    .font(.subheadline)
-                Spacer()
-                Text("$")
-                TextField("1200", text: $cap.capAmountString)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
-                    .frame(width: 80)
-            }
-
-            HStack {
-                Text("Bonus Rate")
-                    .font(.subheadline)
-                Spacer()
-                TextField("4.0", text: $cap.bonusRateString)
-                    .keyboardType(.decimalPad)
-                    .multilineTextAlignment(.trailing)
-                    .frame(width: 60)
-                Text("mpd")
-                    .foregroundStyle(.secondary)
-            }
-
-            Divider()
-        }
-        .padding(.vertical, 4)
-    }
-}
 
 #Preview {
-    NavigationStack {
-        AddCustomCardView(isOnboarding: true)
+    let card = CreditCard(
+        bank: .dbs,
+        network: .visa,
+        cardName: "Altitude Visa Signature",
+        minSpendingThreshold: 500,
+        maxSpendingThreshold: 2000,
+        lastFourDigits: "1234",
+        localEarnRate: 1.2,
+        foreignEarnRate: 2.0,
+        baseMilesRate: 1.2,
+        rewardNotes: "3 mpd on online hotels"
+    )
+
+    return NavigationStack {
+        EditCardView(card: card)
     }
     .modelContainer(for: [CreditCard.self, Expense.self, CategoryCap.self], inMemory: true)
 }

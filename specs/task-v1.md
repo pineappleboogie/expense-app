@@ -115,57 +115,57 @@
     - [x] 4.3.11 Save button with validation
   - [x] 4.4 Update `ContentView.swift` to check for existing cards and route to OnboardingView or MainTabView
 
-- [ ] 5.0 Core Features & Main Interface
-  - [ ] 5.1 Implement `MainTabView` with three tabs:
-    - [ ] 5.1.1 Dashboard tab with house icon
-    - [ ] 5.1.2 Add Expense tab with plus.circle icon
-    - [ ] 5.1.3 Cards tab with creditcard icon
-  - [ ] 5.2 Implement `DashboardView` with:
-    - [ ] 5.2.1 Monthly overview card at top showing calendar month total across all cards
-    - [ ] 5.2.2 Scrollable list of CardProgressRow components for each user card
-    - [ ] 5.2.3 Pull-to-refresh functionality to reload spending data
-  - [ ] 5.3 Implement `CardProgressRow` component with:
-    - [ ] 5.3.1 Header showing bank logo/icon, card name, and last 4 digits if available
-    - [ ] 5.3.2 Current cycle date range display
-    - [ ] 5.3.3 Current total spending amount
-    - [ ] 5.3.4 For simple cards: min threshold progress bar (orange→green) and max threshold progress bar (blue→red)
-    - [ ] 5.3.5 For cards with category caps: mini progress bars for each category showing min unlock and cap progress
-    - [ ] 5.3.6 Status badge showing current threshold status
-    - [ ] 5.3.7 Earn rates display (local/foreign/base mpd)
-    - [ ] 5.3.8 Reward notes if available
-  - [ ] 5.4 Implement `AddExpenseView` with:
-    - [ ] 5.4.1 Amount field with decimal keyboard (SGD)
-    - [ ] 5.4.2 Card picker showing user's cards
-    - [ ] 5.4.3 Bonus category picker (only shown if selected card has category caps, includes "General" option)
-    - [ ] 5.4.4 Date picker defaulting to today
-    - [ ] 5.4.5 Optional expense category picker with icons
-    - [ ] 5.4.6 Save button with validation (amount > 0, card selected)
-    - [ ] 5.4.7 Success feedback and form reset after save
-  - [ ] 5.5 Implement `CardManagementView` with:
-    - [ ] 5.5.1 List of user's cards with reorder capability
-    - [ ] 5.5.2 Swipe-to-delete with confirmation
-    - [ ] 5.5.3 Tap to navigate to EditCardView
-    - [ ] 5.5.4 Add button in navigation bar with options: "From Library" or "Custom Card"
-  - [ ] 5.6 Implement `EditCardView` with:
-    - [ ] 5.6.1 Pre-filled form matching AddCustomCardView fields
-    - [ ] 5.6.2 Save changes button
-    - [ ] 5.6.3 Delete card button with confirmation alert
+- [x] 5.0 Core Features & Main Interface
+  - [x] 5.1 Implement `MainTabView` with three tabs:
+    - [x] 5.1.1 Dashboard tab with house icon
+    - [x] 5.1.2 Add Expense tab with plus.circle icon
+    - [x] 5.1.3 Cards tab with creditcard icon
+  - [x] 5.2 Implement `DashboardView` with:
+    - [x] 5.2.1 Monthly overview card at top showing calendar month total across all cards
+    - [x] 5.2.2 Scrollable list of CardProgressRow components for each user card
+    - [x] 5.2.3 Pull-to-refresh functionality to reload spending data
+  - [x] 5.3 Implement `CardProgressRow` component with:
+    - [x] 5.3.1 Header showing bank logo/icon, card name, and last 4 digits if available
+    - [x] 5.3.2 Current cycle date range display
+    - [x] 5.3.3 Current total spending amount
+    - [x] 5.3.4 For simple cards: min threshold progress bar (orange→green) and max threshold progress bar (blue→red)
+    - [x] 5.3.5 For cards with category caps: mini progress bars for each category showing min unlock and cap progress
+    - [x] 5.3.6 Status badge showing current threshold status
+    - [x] 5.3.7 Earn rates display (local/foreign/base mpd)
+    - [x] 5.3.8 Reward notes if available
+  - [x] 5.4 Implement `AddExpenseView` with:
+    - [x] 5.4.1 Amount field with decimal keyboard (SGD)
+    - [x] 5.4.2 Card picker showing user's cards
+    - [x] 5.4.3 Bonus category picker (only shown if selected card has category caps, includes "General" option)
+    - [x] 5.4.4 Date picker defaulting to today
+    - [x] 5.4.5 Optional expense category picker with icons
+    - [x] 5.4.6 Save button with validation (amount > 0, card selected)
+    - [x] 5.4.7 Success feedback and form reset after save
+  - [x] 5.5 Implement `CardManagementView` with:
+    - [x] 5.5.1 List of user's cards with reorder capability
+    - [x] 5.5.2 Swipe-to-delete with confirmation
+    - [x] 5.5.3 Tap to navigate to EditCardView
+    - [x] 5.5.4 Add button in navigation bar with options: "From Library" or "Custom Card"
+  - [x] 5.6 Implement `EditCardView` with:
+    - [x] 5.6.1 Pre-filled form matching AddCustomCardView fields
+    - [x] 5.6.2 Save changes button
+    - [x] 5.6.3 Delete card button with confirmation alert
 
 - [ ] 6.0 Polish & Reusable Components
-  - [ ] 6.1 Implement `ProgressBarView` reusable component with:
-    - [ ] 6.1.1 Configurable progress value (0.0 to 1.0+)
-    - [ ] 6.1.2 Configurable colors for different states (orange, green, blue, red)
-    - [ ] 6.1.3 Optional label showing current/target values
-    - [ ] 6.1.4 Smooth animation when progress changes
-  - [ ] 6.2 Implement `StatusBadge` reusable component with:
-    - [ ] 6.2.1 Four status types: belowMinimum, minimumMet, inRange, overMaximum
-    - [ ] 6.2.2 Appropriate colors and icons for each status
-    - [ ] 6.2.3 Compact pill-shaped design
-  - [ ] 6.3 Implement `MonthlyOverviewCard` with:
-    - [ ] 6.3.1 Calendar month label (e.g., "January 2025")
-    - [ ] 6.3.2 Total spending amount prominently displayed
-    - [ ] 6.3.3 Card count showing number of active cards
-    - [ ] 6.3.4 Visual styling to stand out as header card
+  - [x] 6.1 Implement `ProgressBarView` reusable component with:
+    - [x] 6.1.1 Configurable progress value (0.0 to 1.0+)
+    - [x] 6.1.2 Configurable colors for different states (orange, green, blue, red)
+    - [x] 6.1.3 Optional label showing current/target values
+    - [x] 6.1.4 Smooth animation when progress changes
+  - [x] 6.2 Implement `StatusBadge` reusable component with:
+    - [x] 6.2.1 Four status types: belowMinimum, minimumMet, inRange, overMaximum
+    - [x] 6.2.2 Appropriate colors and icons for each status
+    - [x] 6.2.3 Compact pill-shaped design
+  - [x] 6.3 Implement `MonthlyOverviewCard` with:
+    - [x] 6.3.1 Calendar month label (e.g., "January 2025")
+    - [x] 6.3.2 Total spending amount prominently displayed
+    - [x] 6.3.3 Card count showing number of active cards
+    - [x] 6.3.4 Visual styling to stand out as header card
   - [ ] 6.4 Add visual polish:
     - [ ] 6.4.1 Consistent spacing and typography across all views
     - [ ] 6.4.2 Appropriate use of SF Symbols for icons
