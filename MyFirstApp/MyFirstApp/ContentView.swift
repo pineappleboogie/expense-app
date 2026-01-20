@@ -6,19 +6,21 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
+    @Query private var cards: [CreditCard]
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, Gabriel!")
+        if cards.isEmpty {
+            OnboardingView()
+        } else {
+            MainTabView()
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
+        .modelContainer(for: [CreditCard.self, Expense.self, CategoryCap.self], inMemory: true)
 }

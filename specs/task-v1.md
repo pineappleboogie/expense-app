@@ -91,29 +91,29 @@
     - [x] 3.3.3 Computed properties for each card's threshold status and progress
     - [x] 3.3.4 Method to get category cap progress for cards with hasCategoryCaps = true
 
-- [ ] 4.0 Onboarding Flow
-  - [ ] 4.1 Implement `OnboardingView` with:
-    - [ ] 4.1.1 Welcome message and app introduction
-    - [ ] 4.1.2 Two action buttons: "Choose from Library" and "Create Custom Card"
-    - [ ] 4.1.3 Logic to check if user has at least one card before allowing navigation to main app
-  - [ ] 4.2 Implement `CardLibraryView` with:
-    - [ ] 4.2.1 List of pre-populated cards grouped by bank (using CardTemplate data)
-    - [ ] 4.2.2 Card detail showing: name, earn rates (local/foreign/base), reward notes
-    - [ ] 4.2.3 Selection action that adds card to user's cards with optional last 4 digits input
-    - [ ] 4.2.4 Visual indicator for cards with category caps
-  - [ ] 4.3 Implement `AddCustomCardView` form with:
-    - [ ] 4.3.1 Bank picker (enum selection)
-    - [ ] 4.3.2 Card network picker (enum selection)
-    - [ ] 4.3.3 Card name text field
-    - [ ] 4.3.4 Last 4 digits optional text field
-    - [ ] 4.3.5 Cycle type picker (calendar vs statement month)
-    - [ ] 4.3.6 Statement date picker (1-31, shown only if statement month selected)
-    - [ ] 4.3.7 Min/max threshold fields (optional Decimal inputs)
-    - [ ] 4.3.8 Earn rate fields (local, foreign, base - optional)
-    - [ ] 4.3.9 Reward notes optional text field
-    - [ ] 4.3.10 Toggle for hasCategoryCaps with dynamic category cap entry form
-    - [ ] 4.3.11 Save button with validation
-  - [ ] 4.4 Update `ContentView.swift` to check for existing cards and route to OnboardingView or MainTabView
+- [x] 4.0 Onboarding Flow
+  - [x] 4.1 Implement `OnboardingView` with:
+    - [x] 4.1.1 Welcome message and app introduction
+    - [x] 4.1.2 Two action buttons: "Choose from Library" and "Create Custom Card"
+    - [x] 4.1.3 Logic to check if user has at least one card before allowing navigation to main app
+  - [x] 4.2 Implement `CardLibraryView` with:
+    - [x] 4.2.1 List of pre-populated cards grouped by bank (using CardTemplate data)
+    - [x] 4.2.2 Card detail showing: name, earn rates (local/foreign/base), reward notes
+    - [x] 4.2.3 Selection action that adds card to user's cards with optional last 4 digits input
+    - [x] 4.2.4 Visual indicator for cards with category caps
+  - [x] 4.3 Implement `AddCustomCardView` form with:
+    - [x] 4.3.1 Bank picker (enum selection)
+    - [x] 4.3.2 Card network picker (enum selection)
+    - [x] 4.3.3 Card name text field
+    - [x] 4.3.4 Last 4 digits optional text field
+    - [x] 4.3.5 Cycle type picker (calendar vs statement month)
+    - [x] 4.3.6 Statement date picker (1-31, shown only if statement month selected)
+    - [x] 4.3.7 Min/max threshold fields (optional Decimal inputs)
+    - [x] 4.3.8 Earn rate fields (local, foreign, base - optional)
+    - [x] 4.3.9 Reward notes optional text field
+    - [x] 4.3.10 Toggle for hasCategoryCaps with dynamic category cap entry form
+    - [x] 4.3.11 Save button with validation
+  - [x] 4.4 Update `ContentView.swift` to check for existing cards and route to OnboardingView or MainTabView
 
 - [ ] 5.0 Core Features & Main Interface
   - [ ] 5.1 Implement `MainTabView` with three tabs:
