@@ -54,3 +54,4 @@ Use the `/process-task-list` skill to work through tasks in specs/task-v1.md:
 1. Complete one sub-task at a time
 2. Request user confirmation before proceeding
 3. Run tests and commit with conventional format (feat/fix/refactor) when parent task completes
+4. Run `teach.md` after commiting to teach coding concepts
