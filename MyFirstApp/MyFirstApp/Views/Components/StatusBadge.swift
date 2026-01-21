@@ -9,15 +9,15 @@ struct StatusBadge: View {
     let status: ThresholdStatus
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: Spacing.xs) {
             Image(systemName: status.icon)
                 .font(.caption2)
             Text(status.rawValue)
                 .font(.caption)
                 .fontWeight(.medium)
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
+        .padding(.horizontal, Spacing.sm)
+        .padding(.vertical, Spacing.xs)
         .background {
             Capsule()
                 .fill(backgroundColor)
@@ -28,32 +28,32 @@ struct StatusBadge: View {
     private var backgroundColor: Color {
         switch status {
         case .belowMinimum:
-            return .orange.opacity(0.15)
+            return Color.appWarning.opacity(0.15)
         case .minimumMet, .inRange:
-            return .green.opacity(0.15)
+            return Color.appSuccess.opacity(0.15)
         case .overMaximum:
-            return .red.opacity(0.15)
+            return Color.appError.opacity(0.15)
         case .noThreshold:
-            return .gray.opacity(0.15)
+            return Color.gray.opacity(0.15)
         }
     }
 
     private var foregroundColor: Color {
         switch status {
         case .belowMinimum:
-            return .orange
+            return Color.appWarning
         case .minimumMet, .inRange:
-            return .green
+            return Color.appSuccess
         case .overMaximum:
-            return .red
+            return Color.appError
         case .noThreshold:
-            return .gray
+            return Color.gray
         }
     }
 }
 
-#Preview {
-    VStack(spacing: 16) {
+#Preview("Light Mode") {
+    VStack(spacing: Spacing.lg) {
         StatusBadge(status: .belowMinimum)
         StatusBadge(status: .minimumMet)
         StatusBadge(status: .inRange)
@@ -61,4 +61,18 @@ struct StatusBadge: View {
         StatusBadge(status: .noThreshold)
     }
     .padding()
+    .background(Color.groupedBackground)
+}
+
+#Preview("Dark Mode") {
+    VStack(spacing: Spacing.lg) {
+        StatusBadge(status: .belowMinimum)
+        StatusBadge(status: .minimumMet)
+        StatusBadge(status: .inRange)
+        StatusBadge(status: .overMaximum)
+        StatusBadge(status: .noThreshold)
+    }
+    .padding()
+    .background(Color.groupedBackground)
+    .preferredColorScheme(.dark)
 }

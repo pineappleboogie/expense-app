@@ -36,7 +36,7 @@ struct ProgressBarView: View {
     var height: CGFloat = 8
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
             if let label = label {
                 Text(label)
                     .font(.caption)
@@ -95,4 +95,27 @@ struct ProgressBarView: View {
         colorScheme: .maxThreshold(exceeded: true)
     )
     .padding()
+}
+
+#Preview("Dark Mode") {
+    VStack(spacing: Spacing.lg) {
+        ProgressBarView(
+            progress: 0.6,
+            label: "Min: $300 / $500",
+            colorScheme: .minThreshold(metMin: false)
+        )
+        ProgressBarView(
+            progress: 1.0,
+            label: "Min: $500 / $500",
+            colorScheme: .minThreshold(metMin: true)
+        )
+        ProgressBarView(
+            progress: 0.5,
+            label: "Max: $1,000 / $2,000",
+            colorScheme: .maxThreshold(exceeded: false)
+        )
+    }
+    .padding()
+    .background(Color.cardBackground)
+    .preferredColorScheme(.dark)
 }

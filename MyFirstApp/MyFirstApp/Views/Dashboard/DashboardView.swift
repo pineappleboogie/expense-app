@@ -9,34 +9,16 @@ import SwiftData
 struct DashboardView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var viewModel: DashboardViewModel?
-    @State private var isRefreshing = false
+    @State private var isLoading = true
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                VStack(spacing: 16) {
-                    // Monthly Overview Card
-                    if let overview = viewModel?.monthlyOverview {
-                        MonthlyOverviewCard(overview: overview)
-                            .padding(.horizontal)
-                    }
-
-                    // Card Progress List
-                    if let summaries = viewModel?.cardSummaries, !summaries.isEmpty {
-                        LazyVStack(spacing: 12) {
-                            ForEach(summaries, id: \.card.id) { summary in
-                                CardProgressRow(summary: summary)
-                                    .padding(.horizontal)
-                            }
-                        }
-                    } else {
-                        emptyStateView
-                    }
+            Group {
+                if isLoading {
+                    loadingView
+                } else {
+                    contentView
                 }
-                .padding(.vertical)
-            }
-            .refreshable {
-                await refreshData()
             }
             .navigationTitle("Dashboard")
             .onAppear {
@@ -44,14 +26,54 @@ struct DashboardView: View {
                     viewModel = DashboardViewModel(modelContext: modelContext)
                 }
                 viewModel?.refresh()
+                isLoading = false
             }
         }
     }
 
+    private var contentView: some View {
+        ScrollView {
+            VStack(spacing: Spacing.lg) {
+                // Monthly Overview Card
+                if let overview = viewModel?.monthlyOverview {
+                    MonthlyOverviewCard(overview: overview)
+                        .padding(.horizontal, Spacing.lg)
+                }
+
+                // Card Progress List
+                if let summaries = viewModel?.cardSummaries, !summaries.isEmpty {
+                    LazyVStack(spacing: Spacing.md) {
+                        ForEach(summaries, id: \.card.id) { summary in
+                            CardProgressRow(summary: summary)
+                                .padding(.horizontal, Spacing.lg)
+                        }
+                    }
+                } else {
+                    emptyStateView
+                }
+            }
+            .padding(.vertical, Spacing.lg)
+        }
+        .refreshable {
+            await refreshData()
+        }
+    }
+
+    private var loadingView: some View {
+        VStack(spacing: Spacing.md) {
+            ProgressView()
+                .scaleEffect(1.2)
+            Text("Loading...")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
     private var emptyStateView: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Spacing.md) {
             Image(systemName: "creditcard")
-                .font(.system(size: 48))
+                .font(.system(size: IconSize.xlarge))
                 .foregroundStyle(.secondary)
 
             Text("No Cards Yet")
@@ -63,7 +85,7 @@ struct DashboardView: View {
                 .multilineTextAlignment(.center)
         }
         .padding(.vertical, 40)
-        .padding(.horizontal)
+        .padding(.horizontal, Spacing.lg)
     }
 
     private func refreshData() async {

@@ -65,7 +65,7 @@ struct CardTemplateRow: View {
     let template: CardTemplate
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
             HStack {
                 Text(template.cardName)
                     .font(.headline)
@@ -74,7 +74,7 @@ struct CardTemplateRow: View {
 
                 if template.hasCategoryCaps {
                     Image(systemName: "chart.bar.fill")
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.appWarning)
                         .font(.caption)
                 }
 
@@ -84,8 +84,8 @@ struct CardTemplateRow: View {
 
             // Earn Rates
             if let local = template.localEarnRate, let foreign = template.foreignEarnRate {
-                HStack(spacing: 16) {
-                    Label("\(formatRate(local)) local", systemImage: "house")
+                HStack(spacing: Spacing.lg) {
+                    Label("\(formatRate(local)) local", systemImage: "house.fill")
                     Label("\(formatRate(foreign)) foreign", systemImage: "airplane")
                 }
                 .font(.caption)
@@ -96,20 +96,20 @@ struct CardTemplateRow: View {
             if let notes = template.rewardNotes {
                 Text(notes)
                     .font(.caption)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.appPrimary)
             }
 
             // Category Caps indicator
             if template.hasCategoryCaps && !template.categoryCaps.isEmpty {
-                HStack {
-                    Image(systemName: "info.circle")
+                HStack(spacing: Spacing.xs) {
+                    Image(systemName: "info.circle.fill")
                     Text("Has category caps: \(template.categoryCaps.map { $0.category.displayName }.joined(separator: ", "))")
                 }
                 .font(.caption2)
-                .foregroundStyle(.orange)
+                .foregroundStyle(Color.appWarning)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, Spacing.xs)
     }
 
     private func formatRate(_ rate: Double) -> String {

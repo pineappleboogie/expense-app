@@ -140,7 +140,7 @@ struct CardListRow: View {
     let card: CreditCard
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: Spacing.xs + 2) {
             HStack {
                 Text(card.bank.displayName)
                     .font(.caption)
@@ -151,7 +151,7 @@ struct CardListRow: View {
                 if card.hasCategoryCaps {
                     Image(systemName: "chart.bar.fill")
                         .font(.caption)
-                        .foregroundStyle(.orange)
+                        .foregroundStyle(Color.appWarning)
                 }
             }
 
@@ -160,7 +160,7 @@ struct CardListRow: View {
 
             // Earn rates
             if card.localEarnRate != nil || card.foreignEarnRate != nil {
-                HStack(spacing: 12) {
+                HStack(spacing: Spacing.md) {
                     if let local = card.localEarnRate {
                         Label(String(format: "%.1f", local), systemImage: "house")
                     }
@@ -168,7 +168,7 @@ struct CardListRow: View {
                         Label(String(format: "%.1f", foreign), systemImage: "airplane")
                     }
                     if let base = card.baseMilesRate {
-                        Label(String(format: "%.1f", base), systemImage: "minus.circle")
+                        Label(String(format: "%.1f", base), systemImage: "star")
                     }
                 }
                 .font(.caption)
@@ -177,7 +177,7 @@ struct CardListRow: View {
 
             // Thresholds
             if card.minSpendingThreshold != nil || card.maxSpendingThreshold != nil {
-                HStack(spacing: 12) {
+                HStack(spacing: Spacing.md) {
                     if let min = card.minSpendingThreshold {
                         Text("Min: \(min.formattedAsWholeCurrency)")
                     }
@@ -186,10 +186,10 @@ struct CardListRow: View {
                     }
                 }
                 .font(.caption)
-                .foregroundStyle(.blue)
+                .foregroundStyle(Color.appPrimary)
             }
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, Spacing.xs)
     }
 }
 

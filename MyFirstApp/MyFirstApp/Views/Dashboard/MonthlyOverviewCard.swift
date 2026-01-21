@@ -9,10 +9,10 @@ struct MonthlyOverviewCard: View {
     let overview: MonthlyOverview
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             HStack {
                 Image(systemName: "calendar")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(Color.appPrimary)
                 Text(overview.monthLabel)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -29,20 +29,32 @@ struct MonthlyOverviewCard: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
-        .padding()
+        .padding(Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background {
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.blue.opacity(0.1))
+            RoundedRectangle(cornerRadius: CornerRadius.large)
+                .fill(Color.appPrimary.opacity(0.1))
         }
     }
 }
 
-#Preview {
+#Preview("Light Mode") {
     MonthlyOverviewCard(overview: MonthlyOverview(
         dateRange: DateRange(start: Date().startOfMonth, end: Date().endOfMonth),
         totalSpending: 1234.56,
         cardCount: 3
     ))
     .padding()
+    .background(Color.groupedBackground)
+}
+
+#Preview("Dark Mode") {
+    MonthlyOverviewCard(overview: MonthlyOverview(
+        dateRange: DateRange(start: Date().startOfMonth, end: Date().endOfMonth),
+        totalSpending: 1234.56,
+        cardCount: 3
+    ))
+    .padding()
+    .background(Color.groupedBackground)
+    .preferredColorScheme(.dark)
 }

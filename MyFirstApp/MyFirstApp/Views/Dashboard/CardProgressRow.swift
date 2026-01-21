@@ -9,7 +9,7 @@ struct CardProgressRow: View {
     let summary: CardSpendingSummary
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.md) {
             // Header: Bank icon, card name, last 4 digits
             headerSection
 
@@ -34,12 +34,12 @@ struct CardProgressRow: View {
                 rewardNotesSection(notes)
             }
         }
-        .padding()
+        .padding(Spacing.lg)
         .background {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.systemBackground))
-                .shadow(color: .black.opacity(0.1), radius: 4, y: 2)
+            RoundedRectangle(cornerRadius: CornerRadius.medium)
+                .fill(Color.cardBackground)
         }
+        .adaptiveShadow()
     }
 
     // MARK: - Header Section
@@ -49,9 +49,9 @@ struct CardProgressRow: View {
             Image(systemName: bankIcon)
                 .font(.title2)
                 .foregroundStyle(bankColor)
-                .frame(width: 32, height: 32)
+                .frame(width: IconSize.large, height: IconSize.large)
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: Spacing.xxs) {
                 Text(summary.card.bank.displayName)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -69,7 +69,7 @@ struct CardProgressRow: View {
 
     // MARK: - Date Range Section
     private var dateRangeSection: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: Spacing.xs) {
             Image(systemName: "calendar.badge.clock")
                 .font(.caption)
             Text(summary.dateRange.displayString)
@@ -87,7 +87,7 @@ struct CardProgressRow: View {
 
     // MARK: - Simple Progress Section (for cards without category caps)
     private var simpleProgressSection: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: Spacing.sm) {
             // Min threshold progress bar
             if let minThreshold = summary.card.minSpendingThreshold {
                 ProgressBarView(
@@ -110,7 +110,7 @@ struct CardProgressRow: View {
 
     // MARK: - Category Cap Progress Section
     private var categoryCapProgressSection: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: Spacing.sm) {
             ForEach(summary.categoryCapProgress, id: \.category) { capProgress in
                 CategoryCapProgressView(progress: capProgress)
             }
@@ -119,7 +119,7 @@ struct CardProgressRow: View {
 
     // MARK: - Earn Rates Section
     private var earnRatesSection: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: Spacing.lg) {
             if let localRate = summary.card.localEarnRate {
                 earnRateItem(label: "Local", rate: localRate)
             }
@@ -134,7 +134,7 @@ struct CardProgressRow: View {
     }
 
     private func earnRateItem(label: String, rate: Double) -> some View {
-        VStack(spacing: 2) {
+        VStack(spacing: Spacing.xxs) {
             Text(String(format: "%.1f", rate))
                 .fontWeight(.semibold)
             Text(label)
@@ -144,7 +144,7 @@ struct CardProgressRow: View {
 
     // MARK: - Reward Notes Section
     private func rewardNotesSection(_ notes: String) -> some View {
-        HStack(spacing: 4) {
+        HStack(spacing: Spacing.xs) {
             Image(systemName: "info.circle")
             Text(notes)
         }
@@ -187,7 +187,7 @@ struct CategoryCapProgressView: View {
     let progress: CategoryCapProgress
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: Spacing.xs) {
             HStack {
                 Text(progress.category.displayName)
                     .font(.caption)
@@ -233,7 +233,7 @@ struct CategoryCapProgressView: View {
     }
 }
 
-#Preview {
+#Preview("Light Mode") {
     let card = CreditCard(
         bank: .dbs,
         network: .visa,
@@ -264,5 +264,40 @@ struct CategoryCapProgressView: View {
 
     return CardProgressRow(summary: summary)
         .padding()
-        .background(Color(.systemGroupedBackground))
+        .background(Color.groupedBackground)
+}
+
+#Preview("Dark Mode") {
+    let card = CreditCard(
+        bank: .dbs,
+        network: .visa,
+        cardName: "Altitude Visa Signature",
+        minSpendingThreshold: 500,
+        maxSpendingThreshold: 2000,
+        lastFourDigits: "1234",
+        localEarnRate: 1.2,
+        foreignEarnRate: 2.0,
+        baseMilesRate: 1.2,
+        rewardNotes: "3 mpd on online hotels"
+    )
+
+    let summary = CardSpendingSummary(
+        card: card,
+        dateRange: DateRange(start: Date().startOfMonth, end: Date().endOfMonth),
+        totalSpending: 750,
+        thresholdStatus: .inRange,
+        thresholdProgress: ThresholdProgress(
+            minProgress: 1.5,
+            maxProgress: 0.375,
+            currentSpend: 750,
+            minThreshold: 500,
+            maxThreshold: 2000
+        ),
+        categoryCapProgress: []
+    )
+
+    return CardProgressRow(summary: summary)
+        .padding()
+        .background(Color.groupedBackground)
+        .preferredColorScheme(.dark)
 }

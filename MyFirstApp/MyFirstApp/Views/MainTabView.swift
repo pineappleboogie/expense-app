@@ -14,19 +14,19 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             DashboardView()
                 .tabItem {
-                    Label("Dashboard", systemImage: "house")
+                    Label("Dashboard", systemImage: "house.fill")
                 }
                 .tag(0)
 
             AddExpenseView(onSave: { selectedTab = 0 })
                 .tabItem {
-                    Label("Add", systemImage: "plus.circle")
+                    Label("Add", systemImage: "plus.circle.fill")
                 }
                 .tag(1)
 
             CardManagementView()
                 .tabItem {
-                    Label("Cards", systemImage: "creditcard")
+                    Label("Cards", systemImage: "creditcard.fill")
                 }
                 .tag(2)
         }

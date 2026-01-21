@@ -151,7 +151,7 @@
     - [x] 5.6.2 Save changes button
     - [x] 5.6.3 Delete card button with confirmation alert
 
-- [ ] 6.0 Polish & Reusable Components
+- [x] 6.0 Polish & Reusable Components
   - [x] 6.1 Implement `ProgressBarView` reusable component with:
     - [x] 6.1.1 Configurable progress value (0.0 to 1.0+)
     - [x] 6.1.2 Configurable colors for different states (orange, green, blue, red)
@@ -166,17 +166,17 @@
     - [x] 6.3.2 Total spending amount prominently displayed
     - [x] 6.3.3 Card count showing number of active cards
     - [x] 6.3.4 Visual styling to stand out as header card
-  - [ ] 6.4 Add visual polish:
-    - [ ] 6.4.1 Consistent spacing and typography across all views
-    - [ ] 6.4.2 Appropriate use of SF Symbols for icons
-    - [ ] 6.4.3 Support for both light and dark mode
-    - [ ] 6.4.4 Loading states where appropriate
-  - [ ] 6.5 Final integration testing:
-    - [ ] 6.5.1 Verify onboarding flow prevents access without at least one card
-    - [ ] 6.5.2 Test adding expenses and seeing dashboard updates
-    - [ ] 6.5.3 Test threshold progress visualization for simple cards
-    - [ ] 6.5.4 Test category cap progress for UOB Visa Signature (with min requirement)
-    - [ ] 6.5.5 Test category cap progress for UOB Preferred Platinum (no min requirement)
-    - [ ] 6.5.6 Test statement cycle date range calculations
-    - [ ] 6.5.7 Verify data persistence across app restarts
-    - [ ] 6.5.8 Test cascade delete when removing a card
+  - [x] 6.4 Add visual polish:
+    - [x] 6.4.1 Consistent spacing and typography across all views
+    - [x] 6.4.2 Appropriate use of SF Symbols for icons
+    - [x] 6.4.3 Support for both light and dark mode
+    - [x] 6.4.4 Loading states where appropriate
+  - [x] 6.5 Final integration testing:
+    - [x] 6.5.1 Verify onboarding flow prevents access without at least one card
+    - [x] 6.5.2 Test adding expenses and seeing dashboard updates
+    - [x] 6.5.3 Test threshold progress visualization for simple cards
+    - [x] 6.5.4 Test category cap progress for UOB Visa Signature (with min requirement)
+    - [x] 6.5.5 Test category cap progress for UOB Preferred Platinum (no min requirement)
+    - [x] 6.5.6 Test statement cycle date range calculations
+    - [x] 6.5.7 Verify data persistence across app restarts
+    - [x] 6.5.8 Test cascade delete when removing a card

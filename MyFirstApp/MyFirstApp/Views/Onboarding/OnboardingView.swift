@@ -15,16 +15,16 @@ struct OnboardingView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 32) {
+            VStack(spacing: Spacing.xxl) {
                 Spacer()
 
                 // Welcome Icon
                 Image(systemName: "creditcard.fill")
-                    .font(.system(size: 80))
-                    .foregroundStyle(.blue)
+                    .font(.system(size: IconSize.xxlarge))
+                    .foregroundStyle(Color.appPrimary)
 
                 // Welcome Message
-                VStack(spacing: 12) {
+                VStack(spacing: Spacing.md) {
                     Text("Welcome to MyFirstApp")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -33,13 +33,13 @@ struct OnboardingView: View {
                         .font(.body)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
+                        .padding(.horizontal, Spacing.xxl)
                 }
 
                 Spacer()
 
                 // Action Buttons
-                VStack(spacing: 16) {
+                VStack(spacing: Spacing.lg) {
                     Text("Add your first card to get started")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
@@ -52,10 +52,10 @@ struct OnboardingView: View {
                             Text("Choose from Library")
                         }
                         .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.blue)
+                        .padding(Spacing.lg)
+                        .background(Color.appPrimary)
                         .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
                     }
 
                     Button {
@@ -66,13 +66,13 @@ struct OnboardingView: View {
                             Text("Create Custom Card")
                         }
                         .frame(maxWidth: .infinity)
-                        .padding()
+                        .padding(Spacing.lg)
                         .background(.secondary.opacity(0.2))
                         .foregroundStyle(.primary)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
                     }
                 }
-                .padding(.horizontal, 24)
+                .padding(.horizontal, Spacing.xl)
 
                 Spacer()
             }
