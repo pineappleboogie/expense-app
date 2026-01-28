@@ -9,6 +9,7 @@ import SwiftData
 struct CardLibraryView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorScheme) private var colorScheme
 
     let isOnboarding: Bool
 
@@ -24,11 +25,16 @@ struct CardLibraryView: View {
             ForEach(Bank.allCases.filter { bank in
                 CardLibrary.cardsByBank[bank]?.isEmpty == false
             }) { bank in
-                Section(header: Text(bank.displayName)) {
+                Section(header: Text(bank.displayName.uppercased())
+                    .font(ReceiptTypography.titleMedium)
+                    .foregroundStyle(ReceiptColors.inkFaded(for: colorScheme))
+                ) {
                     ForEach(CardLibrary.cardsByBank[bank] ?? []) { template in
                         CardTemplateRow(template: template)
+                            .listRowBackground(ReceiptColors.paperAlt(for: colorScheme))
                             .contentShape(Rectangle())
                             .onTapGesture {
+                                HapticManager.selection()
                                 selectedTemplate = template
                                 showAddCardSheet = true
                             }
@@ -36,6 +42,8 @@ struct CardLibraryView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
+        .background(ReceiptColors.paper(for: colorScheme))
         .navigationTitle("Card Library")
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showAddCardSheet) {
@@ -62,51 +70,65 @@ struct CardLibraryView: View {
 // MARK: - Card Template Row
 
 struct CardTemplateRow: View {
+    @Environment(\.colorScheme) private var colorScheme
     let template: CardTemplate
 
     var body: some View {
-        VStack(alignment: .leading, spacing: Spacing.sm) {
-            HStack {
-                Text(template.cardName)
-                    .font(.headline)
-
-                Spacer()
-
-                if template.hasCategoryCaps {
-                    Image(systemName: "chart.bar.fill")
-                        .foregroundStyle(Color.appWarning)
-                        .font(.caption)
-                }
-
-                Image(systemName: template.network.iconName)
-                    .foregroundStyle(.secondary)
+        HStack(spacing: Spacing.md) {
+            // Card Image
+            if let imageName = template.imageName {
+                Image(imageName)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 80, height: 50)
+                    .clipShape(RoundedRectangle(cornerRadius: CornerRadius.small))
             }
 
-            // Earn Rates
-            if let local = template.localEarnRate, let foreign = template.foreignEarnRate {
-                HStack(spacing: Spacing.lg) {
-                    Label("\(formatRate(local)) local", systemImage: "house.fill")
-                    Label("\(formatRate(foreign)) foreign", systemImage: "airplane")
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            }
+            VStack(alignment: .leading, spacing: Spacing.xs) {
+                HStack {
+                    Text(template.cardName.uppercased())
+                        .font(ReceiptTypography.bodyLarge)
+                        .foregroundStyle(ReceiptColors.ink(for: colorScheme))
 
-            // Reward Notes
-            if let notes = template.rewardNotes {
-                Text(notes)
-                    .font(.caption)
-                    .foregroundStyle(Color.appPrimary)
-            }
+                    Spacer()
 
-            // Category Caps indicator
-            if template.hasCategoryCaps && !template.categoryCaps.isEmpty {
-                HStack(spacing: Spacing.xs) {
-                    Image(systemName: "info.circle.fill")
-                    Text("Has category caps: \(template.categoryCaps.map { $0.category.displayName }.joined(separator: ", "))")
+                    if template.hasCategoryCaps {
+                        Text("[CAPS]")
+                            .font(ReceiptTypography.captionSmall)
+                            .foregroundStyle(ReceiptColors.warning)
+                    }
                 }
-                .font(.caption2)
-                .foregroundStyle(Color.appWarning)
+
+                // Earn Rates
+                if let local = template.localEarnRate, let foreign = template.foreignEarnRate {
+                    HStack(spacing: Spacing.lg) {
+                        Text("LOCAL \(formatRate(local))")
+                        Text("FOREIGN \(formatRate(foreign))")
+                    }
+                    .font(ReceiptTypography.captionMedium)
+                    .foregroundStyle(ReceiptColors.inkFaded(for: colorScheme))
+                }
+
+                // Max Spend indicator
+                if let maxSpend = template.maxSpendingThreshold {
+                    Text("MAX $\(NSDecimalNumber(decimal: maxSpend).intValue)")
+                        .font(ReceiptTypography.captionMedium)
+                        .foregroundStyle(ReceiptColors.accent)
+                }
+
+                // Reward Notes
+                if let notes = template.rewardNotes {
+                    Text(notes.uppercased())
+                        .font(ReceiptTypography.captionSmall)
+                        .foregroundStyle(ReceiptColors.inkLight(for: colorScheme))
+                }
+
+                // Category Caps indicator
+                if template.hasCategoryCaps && !template.categoryCaps.isEmpty {
+                    Text("CAPS: \(template.categoryCaps.map { $0.category.displayName.uppercased() }.joined(separator: ", "))")
+                        .font(ReceiptTypography.captionSmall)
+                        .foregroundStyle(ReceiptColors.warning)
+                }
             }
         }
         .padding(.vertical, Spacing.xs)
@@ -114,9 +136,9 @@ struct CardTemplateRow: View {
 
     private func formatRate(_ rate: Double) -> String {
         if rate == rate.rounded() {
-            return String(format: "%.0f mpd", rate)
+            return String(format: "%.0f MPD", rate)
         }
-        return String(format: "%.1f mpd", rate)
+        return String(format: "%.1f MPD", rate)
     }
 }
 

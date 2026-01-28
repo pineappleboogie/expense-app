@@ -8,6 +8,7 @@ import SwiftData
 
 struct CardManagementView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.colorScheme) private var colorScheme
     @Query(sort: \CreditCard.displayOrder) private var cards: [CreditCard]
 
     @State private var viewModel: CardManagementViewModel?
@@ -26,8 +27,10 @@ struct CardManagementView: View {
                 } else {
                     ForEach(cards) { card in
                         CardListRow(card: card)
+                            .listRowBackground(ReceiptColors.paperAlt(for: colorScheme))
                             .contentShape(Rectangle())
                             .onTapGesture {
+                                HapticManager.selection()
                                 cardToEdit = card
                             }
                     }
@@ -35,6 +38,8 @@ struct CardManagementView: View {
                     .onMove(perform: moveCards)
                 }
             }
+            .scrollContentBackground(.hidden)
+            .background(ReceiptColors.paper(for: colorScheme))
             .navigationTitle("Cards")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -137,56 +142,61 @@ struct CardManagementView: View {
 // MARK: - Card List Row
 
 struct CardListRow: View {
+    @Environment(\.colorScheme) private var colorScheme
     let card: CreditCard
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.xs + 2) {
-            HStack {
-                Text(card.bank.displayName)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Spacer()
+            // Header row with bank and category caps indicator
+            HStack(spacing: 0) {
+                Text(card.bank.displayName.uppercased())
+                    .font(ReceiptTypography.captionMedium)
+                    .foregroundStyle(ReceiptColors.inkFaded(for: colorScheme))
 
                 if card.hasCategoryCaps {
-                    Image(systemName: "chart.bar.fill")
-                        .font(.caption)
-                        .foregroundStyle(Color.appWarning)
+                    Text(" [CAPS]")
+                        .font(ReceiptTypography.captionSmall)
+                        .foregroundStyle(ReceiptColors.warning)
                 }
             }
 
-            Text(card.displayName)
-                .font(.headline)
+            // Card name
+            Text(card.displayName.uppercased())
+                .font(ReceiptTypography.bodyLarge)
+                .foregroundStyle(ReceiptColors.ink(for: colorScheme))
+
+            DottedDivider(color: ReceiptColors.inkLight(for: colorScheme))
+                .padding(.vertical, Spacing.xxs)
 
             // Earn rates
             if card.localEarnRate != nil || card.foreignEarnRate != nil {
                 HStack(spacing: Spacing.md) {
                     if let local = card.localEarnRate {
-                        Label(String(format: "%.1f", local), systemImage: "house")
+                        Text("LOCAL \(String(format: "%.1f", local))")
                     }
                     if let foreign = card.foreignEarnRate {
-                        Label(String(format: "%.1f", foreign), systemImage: "airplane")
+                        Text("FOREIGN \(String(format: "%.1f", foreign))")
                     }
                     if let base = card.baseMilesRate {
-                        Label(String(format: "%.1f", base), systemImage: "star")
+                        Text("BASE \(String(format: "%.1f", base))")
                     }
                 }
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(ReceiptTypography.captionMedium)
+                .foregroundStyle(ReceiptColors.inkFaded(for: colorScheme))
             }
 
             // Thresholds
             if card.minSpendingThreshold != nil || card.maxSpendingThreshold != nil {
                 HStack(spacing: Spacing.md) {
                     if let min = card.minSpendingThreshold {
-                        Text("Min: \(min.formattedAsWholeCurrency)")
+                        Text("MIN \(min.formattedAsWholeCurrency)")
                     }
                     if let max = card.maxSpendingThreshold {
-                        Text("Max: \(max.formattedAsWholeCurrency)")
+                        Text("MAX \(max.formattedAsWholeCurrency)")
                     }
                 }
-                .font(.caption)
-                .foregroundStyle(Color.appPrimary)
+                .font(ReceiptTypography.captionMedium)
+                .foregroundStyle(ReceiptColors.accent)
             }
         }
         .padding(.vertical, Spacing.xs)

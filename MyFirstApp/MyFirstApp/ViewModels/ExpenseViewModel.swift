@@ -18,23 +18,26 @@ final class ExpenseViewModel {
 
     // MARK: - 3.2.1 Add a new expense
 
-    /// Add a new expense with amount, card, date, optional category, and optional bonus category
+    /// Add a new expense with amount, card, date, optional label, category, and bonus category
     /// - Parameters:
     ///   - amount: The expense amount in SGD
     ///   - card: The credit card to associate with
     ///   - date: The date of the expense (defaults to today)
+    ///   - label: Optional note describing the expense (e.g., "Chicken rice")
     ///   - category: Optional user expense category for tracking
     ///   - bonusCategory: Optional bonus category for cards with category caps
     func addExpense(
         amount: Decimal,
         card: CreditCard,
         date: Date = Date(),
+        label: String? = nil,
         category: ExpenseCategory? = nil,
         bonusCategory: BonusCategory? = nil
     ) {
         let expense = Expense(
             amount: amount,
             date: date,
+            label: label,
             category: category,
             bonusCategory: bonusCategory
         )

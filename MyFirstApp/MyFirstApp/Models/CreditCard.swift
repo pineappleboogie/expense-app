@@ -23,6 +23,7 @@ final class CreditCard {
     var rewardNotes: String?
     var hasCategoryCaps: Bool
     var displayOrder: Int
+    var imageName: String?
 
     @Relationship(deleteRule: .cascade, inverse: \CategoryCap.card)
     var categoryCaps: [CategoryCap]
@@ -46,6 +47,7 @@ final class CreditCard {
         rewardNotes: String? = nil,
         hasCategoryCaps: Bool = false,
         displayOrder: Int = 0,
+        imageName: String? = nil,
         categoryCaps: [CategoryCap] = [],
         expenses: [Expense] = []
     ) {
@@ -64,6 +66,7 @@ final class CreditCard {
         self.rewardNotes = rewardNotes
         self.hasCategoryCaps = hasCategoryCaps
         self.displayOrder = displayOrder
+        self.imageName = imageName
         self.categoryCaps = categoryCaps
         self.expenses = expenses
     }

@@ -8,74 +8,103 @@ import SwiftData
 
 struct OnboardingView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.colorScheme) private var colorScheme
     @Query private var cards: [CreditCard]
 
     @State private var showCardLibrary = false
     @State private var showCustomCardForm = false
+
+    private let decorativeLine = String(repeating: "═", count: 28)
+
+    private let asciiLogo = """
+    ╔════════════════════════╗
+    ║  EXPENSE  TRACKER      ║
+    ║  ────────────────────  ║
+    ║  Track • Optimize •    ║
+    ║  Earn Miles            ║
+    ╚════════════════════════╝
+    """
 
     var body: some View {
         NavigationStack {
             VStack(spacing: Spacing.xxl) {
                 Spacer()
 
-                // Welcome Icon
-                Image(systemName: "creditcard.fill")
-                    .font(.system(size: IconSize.xxlarge))
-                    .foregroundStyle(Color.appPrimary)
+                // ASCII Logo
+                Text(asciiLogo)
+                    .font(ReceiptTypography.bodySmall)
+                    .foregroundStyle(ReceiptColors.ink(for: colorScheme))
+                    .multilineTextAlignment(.center)
 
                 // Welcome Message
                 VStack(spacing: Spacing.md) {
-                    Text("Welcome to MyFirstApp")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+                    Text(decorativeLine)
+                        .font(ReceiptTypography.captionMedium)
+                        .foregroundStyle(ReceiptColors.inkLight(for: colorScheme))
 
-                    Text("Track your credit card spending to optimize miles earning")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
+                    Text("W E L C O M E")
+                        .font(ReceiptTypography.titleLarge)
+                        .foregroundStyle(ReceiptColors.ink(for: colorScheme))
+
+                    Text("Track your credit card spending\nto optimize miles earning")
+                        .font(ReceiptTypography.bodyMedium)
+                        .foregroundStyle(ReceiptColors.inkFaded(for: colorScheme))
                         .multilineTextAlignment(.center)
-                        .padding(.horizontal, Spacing.xxl)
+
+                    Text(decorativeLine)
+                        .font(ReceiptTypography.captionMedium)
+                        .foregroundStyle(ReceiptColors.inkLight(for: colorScheme))
                 }
 
                 Spacer()
 
                 // Action Buttons
                 VStack(spacing: Spacing.lg) {
-                    Text("Add your first card to get started")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                    Text("ADD YOUR FIRST CARD".letterSpaced)
+                        .font(ReceiptTypography.captionMedium)
+                        .foregroundStyle(ReceiptColors.inkFaded(for: colorScheme))
 
                     Button {
+                        HapticManager.selection()
                         showCardLibrary = true
                     } label: {
-                        HStack {
-                            Image(systemName: "list.bullet.rectangle")
-                            Text("Choose from Library")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(Spacing.lg)
-                        .background(Color.appPrimary)
-                        .foregroundStyle(.white)
-                        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
+                        Text("[ CHOOSE FROM LIBRARY ]")
+                            .font(ReceiptTypography.bodyMedium)
+                            .foregroundStyle(ReceiptColors.ink(for: colorScheme))
+                            .frame(maxWidth: .infinity)
+                            .padding(Spacing.lg)
+                            .background(ReceiptColors.paperAlt(for: colorScheme))
+                            .overlay(
+                                Rectangle()
+                                    .stroke(ReceiptColors.ink(for: colorScheme), lineWidth: 1)
+                            )
                     }
+                    .buttonStyle(ReceiptButtonStyle())
 
                     Button {
+                        HapticManager.selection()
                         showCustomCardForm = true
                     } label: {
-                        HStack {
-                            Image(systemName: "plus.rectangle")
-                            Text("Create Custom Card")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(Spacing.lg)
-                        .background(.secondary.opacity(0.2))
-                        .foregroundStyle(.primary)
-                        .clipShape(RoundedRectangle(cornerRadius: CornerRadius.medium))
+                        Text("[ CREATE CUSTOM CARD ]")
+                            .font(ReceiptTypography.bodyMedium)
+                            .foregroundStyle(ReceiptColors.inkFaded(for: colorScheme))
+                            .frame(maxWidth: .infinity)
+                            .padding(Spacing.lg)
+                            .overlay(
+                                Rectangle()
+                                    .stroke(
+                                        style: StrokeStyle(lineWidth: 1, dash: [4, 2])
+                                    )
+                                    .foregroundStyle(ReceiptColors.inkLight(for: colorScheme))
+                            )
                     }
+                    .buttonStyle(ReceiptButtonStyle())
                 }
                 .padding(.horizontal, Spacing.xl)
 
                 Spacer()
             }
+            .background(ReceiptColors.paper(for: colorScheme))
             .navigationDestination(isPresented: $showCardLibrary) {
                 CardLibraryView(isOnboarding: true)
             }

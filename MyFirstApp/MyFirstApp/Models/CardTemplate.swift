@@ -24,6 +24,8 @@ struct CardTemplate: Identifiable {
     let hasCategoryCaps: Bool
     let categoryCaps: [CategoryCapTemplate]
     let cycleType: CycleType
+    let imageName: String?
+    let maxSpendingThreshold: Decimal?
 
     init(
         bank: Bank,
@@ -35,7 +37,9 @@ struct CardTemplate: Identifiable {
         rewardNotes: String? = nil,
         hasCategoryCaps: Bool = false,
         categoryCaps: [CategoryCapTemplate] = [],
-        cycleType: CycleType = .calendarMonth
+        cycleType: CycleType = .calendarMonth,
+        imageName: String? = nil,
+        maxSpendingThreshold: Decimal? = nil
     ) {
         self.bank = bank
         self.network = network
@@ -47,6 +51,8 @@ struct CardTemplate: Identifiable {
         self.hasCategoryCaps = hasCategoryCaps
         self.categoryCaps = categoryCaps
         self.cycleType = cycleType
+        self.imageName = imageName
+        self.maxSpendingThreshold = maxSpendingThreshold
     }
 
     func toCreditCard(lastFourDigits: String? = nil, displayOrder: Int = 0, statementDate: Int? = nil) -> CreditCard {
@@ -54,6 +60,7 @@ struct CardTemplate: Identifiable {
             bank: bank,
             network: network,
             cardName: cardName,
+            maxSpendingThreshold: maxSpendingThreshold,
             cycleType: cycleType,
             statementDate: statementDate,
             localEarnRate: localEarnRate,
@@ -64,6 +71,7 @@ struct CardTemplate: Identifiable {
             displayOrder: displayOrder
         )
         card.lastFourDigits = lastFourDigits
+        card.imageName = self.imageName
 
         for capTemplate in categoryCaps {
             let cap = CategoryCap(
@@ -81,25 +89,21 @@ struct CardTemplate: Identifiable {
 
 struct CardLibrary {
     static let allCards: [CardTemplate] = [
-        // MARK: - DBS
+        // MARK: - Citibank
         CardTemplate(
-            bank: .dbs,
+            bank: .citibank,
             network: .visa,
-            cardName: "Altitude Visa Signature",
-            localEarnRate: 1.2,
-            foreignEarnRate: 2.0,
-            baseMilesRate: 1.2,
-            rewardNotes: "3 mpd online hotels"
+            cardName: "Rewards Card",
+            localEarnRate: 4.0,
+            foreignEarnRate: 4.0,
+            baseMilesRate: 0.4,
+            rewardNotes: "10x on categories",
+            cycleType: .statementMonth,
+            imageName: "CitibankRewards",
+            maxSpendingThreshold: 1000
         ),
-        CardTemplate(
-            bank: .dbs,
-            network: .amex,
-            cardName: "Altitude AMEX",
-            localEarnRate: 1.2,
-            foreignEarnRate: 2.0,
-            baseMilesRate: 1.2,
-            rewardNotes: "3 mpd online hotels"
-        ),
+
+        // MARK: - DBS
         CardTemplate(
             bank: .dbs,
             network: .mastercard,
@@ -107,45 +111,26 @@ struct CardLibrary {
             localEarnRate: 4.0,
             foreignEarnRate: 4.0,
             baseMilesRate: 0.4,
-            rewardNotes: "Capped at $2k/month online"
-        ),
-        CardTemplate(
-            bank: .dbs,
-            network: .visa,
-            cardName: "yuu Visa",
-            localEarnRate: 10.0,
-            foreignEarnRate: 0.14,
-            baseMilesRate: 0.14,
-            rewardNotes: "10 mpd at yuu merchants, $800 min spend, $823 cap"
-        ),
-        CardTemplate(
-            bank: .dbs,
-            network: .amex,
-            cardName: "yuu AMEX",
-            localEarnRate: 10.0,
-            foreignEarnRate: 0.14,
-            baseMilesRate: 0.14,
-            rewardNotes: "10 mpd at yuu merchants, $800 min spend, $823 cap"
+            rewardNotes: "Capped at $2k/month online",
+            imageName: "DBSWomansWorld",
+            maxSpendingThreshold: 1000
         ),
 
         // MARK: - UOB
         CardTemplate(
             bank: .uob,
             network: .visa,
-            cardName: "PRVI Miles Visa",
-            localEarnRate: 1.4,
-            foreignEarnRate: 2.4,
-            baseMilesRate: 1.4,
-            rewardNotes: "No cap"
-        ),
-        CardTemplate(
-            bank: .uob,
-            network: .mastercard,
-            cardName: "PRVI Miles Mastercard",
-            localEarnRate: 1.4,
-            foreignEarnRate: 2.4,
-            baseMilesRate: 1.4,
-            rewardNotes: "No cap"
+            cardName: "Preferred Platinum Visa",
+            localEarnRate: 4.0,
+            foreignEarnRate: 4.0,
+            baseMilesRate: 0.4,
+            rewardNotes: "No minimum per category",
+            hasCategoryCaps: true,
+            categoryCaps: [
+                CategoryCapTemplate(category: .online, minSpend: nil, capAmount: 600, bonusRate: 4.0),
+                CategoryCapTemplate(category: .contactless, minSpend: nil, capAmount: 600, bonusRate: 4.0)
+            ],
+            imageName: "UOBPreferredPlatinum"
         ),
         CardTemplate(
             bank: .uob,
@@ -160,21 +145,8 @@ struct CardLibrary {
                 CategoryCapTemplate(category: .foreignCurrency, minSpend: 1000, capAmount: 1200, bonusRate: 4.0),
                 CategoryCapTemplate(category: .contactless, minSpend: 1000, capAmount: 1200, bonusRate: 4.0)
             ],
-            cycleType: .statementMonth
-        ),
-        CardTemplate(
-            bank: .uob,
-            network: .visa,
-            cardName: "Preferred Platinum Visa",
-            localEarnRate: 4.0,
-            foreignEarnRate: 4.0,
-            baseMilesRate: 0.4,
-            rewardNotes: "No minimum per category",
-            hasCategoryCaps: true,
-            categoryCaps: [
-                CategoryCapTemplate(category: .online, minSpend: nil, capAmount: 600, bonusRate: 4.0),
-                CategoryCapTemplate(category: .contactless, minSpend: nil, capAmount: 600, bonusRate: 4.0)
-            ]
+            cycleType: .statementMonth,
+            imageName: "UOBVisaSignature"
         ),
         CardTemplate(
             bank: .uob,
@@ -188,150 +160,8 @@ struct CardLibrary {
             categoryCaps: [
                 CategoryCapTemplate(category: .shopping, minSpend: nil, capAmount: 750, bonusRate: 4.0),
                 CategoryCapTemplate(category: .dining, minSpend: nil, capAmount: 750, bonusRate: 4.0)
-            ]
-        ),
-        CardTemplate(
-            bank: .uob,
-            network: .mastercard,
-            cardName: "Lady's Card",
-            localEarnRate: 4.0,
-            foreignEarnRate: 4.0,
-            baseMilesRate: 0.4,
-            rewardNotes: "Select 1 category, $1k cap",
-            hasCategoryCaps: true,
-            categoryCaps: [
-                CategoryCapTemplate(category: .shopping, minSpend: nil, capAmount: 1000, bonusRate: 4.0)
-            ]
-        ),
-
-        // MARK: - OCBC
-        CardTemplate(
-            bank: .ocbc,
-            network: .visa,
-            cardName: "90°N Card",
-            localEarnRate: 1.3,
-            foreignEarnRate: 2.1,
-            baseMilesRate: 1.3,
-            rewardNotes: "No cap, no expiry"
-        ),
-        CardTemplate(
-            bank: .ocbc,
-            network: .visa,
-            cardName: "Rewards Card",
-            localEarnRate: 4.0,
-            foreignEarnRate: 4.0,
-            baseMilesRate: 0.4,
-            rewardNotes: "6 mpd promo on e-commerce"
-        ),
-
-        // MARK: - Citibank
-        CardTemplate(
-            bank: .citibank,
-            network: .visa,
-            cardName: "Rewards Card",
-            localEarnRate: 4.0,
-            foreignEarnRate: 4.0,
-            baseMilesRate: 0.4,
-            rewardNotes: "10x on categories",
-            cycleType: .statementMonth
-        ),
-        CardTemplate(
-            bank: .citibank,
-            network: .visa,
-            cardName: "PremierMiles Visa",
-            localEarnRate: 1.2,
-            foreignEarnRate: 2.0,
-            baseMilesRate: 1.2,
-            rewardNotes: "Discontinuing Jan 2026"
-        ),
-
-        // MARK: - HSBC
-        CardTemplate(
-            bank: .hsbc,
-            network: .visa,
-            cardName: "Revolution",
-            localEarnRate: 4.0,
-            foreignEarnRate: 4.0,
-            baseMilesRate: 0.4,
-            rewardNotes: "Online & contactless, $1.5k cap"
-        ),
-        CardTemplate(
-            bank: .hsbc,
-            network: .visa,
-            cardName: "TravelOne",
-            localEarnRate: 1.0,
-            foreignEarnRate: 2.5,
-            baseMilesRate: 1.0,
-            rewardNotes: "No FX fee"
-        ),
-
-        // MARK: - Standard Chartered
-        CardTemplate(
-            bank: .stanChart,
-            network: .visa,
-            cardName: "Visa Infinite",
-            localEarnRate: 1.4,
-            foreignEarnRate: 3.0,
-            baseMilesRate: 1.4,
-            rewardNotes: "$2k min spend"
-        ),
-        CardTemplate(
-            bank: .stanChart,
-            network: .visa,
-            cardName: "X Card",
-            localEarnRate: nil,
-            foreignEarnRate: nil,
-            baseMilesRate: nil,
-            rewardNotes: "Cashback card, not miles"
-        ),
-
-        // MARK: - AMEX
-        CardTemplate(
-            bank: .amex,
-            network: .amex,
-            cardName: "KrisFlyer Card",
-            localEarnRate: 1.1,
-            foreignEarnRate: 2.0,
-            baseMilesRate: 1.1,
-            rewardNotes: "Direct KrisFlyer earn"
-        ),
-        CardTemplate(
-            bank: .amex,
-            network: .amex,
-            cardName: "Platinum Card",
-            localEarnRate: 1.6,
-            foreignEarnRate: 1.6,
-            baseMilesRate: 1.6,
-            rewardNotes: "With MR bonus"
-        ),
-
-        // MARK: - Maybank
-        CardTemplate(
-            bank: .maybank,
-            network: .visa,
-            cardName: "Horizon Visa Signature",
-            localEarnRate: 1.6,
-            foreignEarnRate: 3.2,
-            baseMilesRate: 1.6,
-            rewardNotes: "Good overseas rate"
-        ),
-        CardTemplate(
-            bank: .maybank,
-            network: .mastercard,
-            cardName: "World Mastercard",
-            localEarnRate: 0.4,
-            foreignEarnRate: 3.2,
-            baseMilesRate: 0.4,
-            rewardNotes: "4 mpd petrol, 3.2 mpd FCY with $4k min spend"
-        ),
-        CardTemplate(
-            bank: .maybank,
-            network: .visa,
-            cardName: "XL Rewards Card",
-            localEarnRate: 4.0,
-            foreignEarnRate: 4.0,
-            baseMilesRate: 0.4,
-            rewardNotes: "4 mpd dining/shopping/travel/FCY, $500 min, $1k cap, under 40 only"
+            ],
+            imageName: "UOBLadysSolitaire"
         )
     ]
 
